@@ -1,0 +1,42 @@
+service: ecs-circuit-breaker
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  ecr:
+    scanOnPush: true
+    images:
+      test_ecs_circuit_breaker:
+        path: .
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ecr:DescribeRepositories
+
+resources:
+  Resources:
+    MyEcsCircuitBreaker:
+      Type: AWS::ECS::Service
+      DeploymentCircuitBreaker:
+        Enable: true
+        Rollback: true
+
+fargate:
+  clusterName: ecs-circuit-breaker-fargate
+  containerInsights: false
+  memory: '0.5GB'
+  cpu: 256
+  environment:
+    name: test
+  vpc:
+    assignPublicIp: false
+    securityGroupIds:
+      - sg-0005ab2058648df29
+    subnetIds: 
+      - subnet-02dff2d9fe3c90149
+      - subnet-0c439dfbd6adce641
+  
+
+plugins:
+  - serverless-fargate

@@ -1,0 +1,32 @@
+image: node:18-alpine
+
+variables:
+  GIT_STRATEGY: clone
+
+cache: &global_cache
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull-push
+
+stages:
+  - deploy
+
+before_script:
+  - chmod +x ./scripts/setAWSEnvironment.sh
+  - ./scripts/setAWSEnvironment.sh
+
+serverless-sandpit-deploy:
+  stage: deploy
+  environment:
+    name: sandpit
+  script:
+    - yarn deploy:sandpit
+  when: manual
+  only:
+    - master
+    - main
+    - test
+  cache:
+    <<: *global_cache
+    policy: pull
