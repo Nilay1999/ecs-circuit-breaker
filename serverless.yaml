@@ -13,14 +13,16 @@ provider:
     - Effect: Allow
       Action:
         - ecr:DescribeRepositories
+      Resource: '*'
 
 resources:
   Resources:
     MyEcsCircuitBreaker:
       Type: AWS::ECS::Service
-      DeploymentCircuitBreaker:
-        Enable: true
-        Rollback: true
+      DeploymentConfiguration:
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
 
 fargate:
   clusterName: ecs-circuit-breaker-fargate
