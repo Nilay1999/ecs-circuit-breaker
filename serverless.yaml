@@ -19,10 +19,23 @@ resources:
   Resources:
     MyEcsCircuitBreaker:
       Type: AWS::ECS::Service
-      DeploymentConfiguration:
-        DeploymentCircuitBreaker:
-          Enable: true
-          Rollback: true
+      Properties:
+        Cluster: ecs-circuit-breaker-fargate
+        DeploymentConfiguration:
+          DeploymentCircuitBreaker:
+            Enable: true
+            Rollback: true
+        TaskDefinition: your-task-definition-arn
+        LaunchType: FARGATE
+        NetworkConfiguration:
+          AwsvpcConfiguration:
+            Subnets:
+              - subnet-02dff2d9fe3c90149
+              - subnet-0c439dfbd6adce641
+            SecurityGroups:
+              - sg-0005ab2058648df29
+        DesiredCount: 1
+        PropagateTags: SERVICE
 
 fargate:
   clusterName: ecs-circuit-breaker-fargate
