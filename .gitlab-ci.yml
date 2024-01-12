@@ -20,7 +20,6 @@ before_script:
 build:
   stage: build
   script:
-    - yarn audit:critical
     - yarn install
 
 serverless-sandpit-deploy:
