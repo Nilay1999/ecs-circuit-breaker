@@ -1,9 +1,10 @@
-service: ecs-circuit-breaker
+service: ecs-circuit-breaker-test
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: eu-west-1
+  stage: test
   ecr:
     scanOnPush: true
     images:
@@ -14,6 +15,8 @@ provider:
       Action:
         - ecr:DescribeRepositories
       Resource: '*'
+  deploymentBucket:
+    name: backstage-poc-local-serverlessdeploymentbucket-1r42x3uz06stl
 
 resources:
   Resources:
@@ -22,6 +25,7 @@ resources:
       Properties:
         Cluster: ecs-circuit-breaker-fargate
         DeploymentConfiguration:
+        
           DeploymentCircuitBreaker:
             Enable: true
             Rollback: true
